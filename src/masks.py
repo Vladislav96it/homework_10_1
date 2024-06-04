@@ -1,16 +1,10 @@
-def card_hide(card: str) -> str:
+def card_hide(card_number: int) -> str:
     """Функция принимает на вход номер карты и возвращает ее маску."""
-    s = card.split()
-    number = [i for i in s if i.isdigit()]
-    number = ' '.join(number)
-    model = [i for i in s if i.isdigit() == False]
-    model = ' '.join(model)
-    mask = f"{number[:4]}{number[4:6]}2** {number[-4:]}"
-    return f"{model} {mask}"
+    return f"{str(card_number)[:4]} {str(card_number)[4:6]}** **** {str(card_number)[-4:]}"
 
 
-def masks_account_numbers(score: str) -> str:
+def masks_account_numbers(score: int) -> str:
     """Функция, которая маскирует номер счета"""
-    numbers = score.split()[1]
-    mask = f'**{numbers[-4:]}'
-    return f"{score.split()[0]}"
+    return f'**{str(score)[-4:]}'
+# print(card_hide(7000792289606361))
+# print(masks_account_numbers(73654108430135874305))

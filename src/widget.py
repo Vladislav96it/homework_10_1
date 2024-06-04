@@ -1,15 +1,13 @@
-from functions import card_hide, masks_account_numbers
+from src.masks import card_hide, masks_account_numbers
 
 
-def defend (object: str) -> str:
+def mask_account_card(object: str) -> str:
     """функцию, которая умеет работать как с картами, так и со счетами."""
-    text = ''
-    ind = 0
-    while object[ind].isdigit() != True:
-        text += object[ind]
-        ind += 1
-    text = text[:4]
-    if text == 'Счет':
-        return masks_account_numbers(object)
-    else:
-        return card_hide(object)
+    if object[:4] == "Счет":
+        return f'{object[:5]}{masks_account_numbers(int(object[5:]))}'
+    return f"{object[:-16]}{card_hide(int(object[-16:]))}"
+
+
+# print(mask_account_card("Счет 73654108430135874305"))
+
+def get_data
