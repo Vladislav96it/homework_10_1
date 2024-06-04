@@ -10,4 +10,8 @@ def mask_account_card(object: str) -> str:
 
 # print(mask_account_card("Счет 73654108430135874305"))
 
-def get_data
+date_no = "2018-07-11T02:26:18.671407"
+
+
+def get_data(date_no):
+    return f'{date_no[8:10]}.{date_no[5:7]}.{date_no[:4]}'
