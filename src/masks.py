@@ -5,4 +5,4 @@ def card_hide(card_number: int) -> str:
 
 def masks_account_numbers(score: int) -> str:
     """Функция, которая маскирует номер счета"""
-    return f'**{str(score)[-4:]}'
+    return f"**{str(score)[-4:]}"
