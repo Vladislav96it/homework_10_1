@@ -19,5 +19,5 @@ def sort_by_date(operations: list[dict], is_reverse: bool = True) -> list[dict]:
     """
     return [
         operation
-        for operation in sorted(operations, key=lambda x: ['date'], reverse=is_reverse)
+        for operation in sorted(operations, key=lambda x: x['date'], reverse=is_reverse)
     ]
