@@ -8,6 +8,8 @@ packages = [{include = "dz_9"}]
 
 [tool.poetry.dependencies]
 python = "^3.12"
+requests = "^2.32.3"
+python-dotenv = "^1.0.1"
 
 
 
