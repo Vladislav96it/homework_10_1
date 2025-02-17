@@ -1,23 +1,41 @@
-def filter_by_state(operations: list[dict], state: str = 'EXECUTED') -> list[dict]:
-    """функцию, которая принимает на вход список словарей
-     и значение для ключа state(опциональный параметр со значением по умолчанию EXECUTED)
-      и возвращает новый список,
-     содержащий только те словари,
-      у которых ключ state содержит переданное в функцию значение.
-      """
-    return [
-        operation
-        for operation in operations
-        if operation['state'] == state
-    ]
+import re
+from collections import Counter
+from typing import Any, Dict, List
 
 
-def sort_by_date(operations: list[dict], is_reverse: bool = True) -> list[dict]:
-    """функцию, которая принимает на вход список словарей и возвращает новый список,
-     в котором исходные словари отсортированы по убыванию даты (ключ date.
- Функция принимает два аргумента, второй необязательный задает порядок сортировки (убывание, возрастание).
+def filter_by_state(list_of_dict: List[Dict[str, Any]], state: str = "EXECUTED") -> List[Dict[str, Any]]:
+    """ Возвращает список словарей со значением ключа state """
+
+    result = []
+    for dictionary in list_of_dict:
+        if dictionary["state"] == state:
+            result.append(dictionary)
+    return result
+
+
+def sort_by_date(list_of_dict: List[Dict[str, Any]], ascending: bool = True) -> List[Dict[str, Any]]:
+    """ Возвращает отсортированный список словарей по дате """
+
+    return sorted(list_of_dict, key=lambda x: x["date"], reverse=ascending)
+
+
+def search_by_description(operations: list[dict], user_search: str) -> list[dict]:
+    """Функция принимает список словарей с данными о банковских операциях и строку поиска
+    и возвращает список словарей, у которых в описании есть данная строка
     """
-    return [
-        operation
-        for operation in sorted(operations, key=lambda x: x['date'], reverse=is_reverse)
-    ]
+
+    return [operation for operation in operations if re.search(user_search.lower(), operation["description"].lower())]
+
+
+def get_count_operations_by_category(operations: list[dict], list_of_category: list) -> dict:
+    """Функция принимает список словарей с данными о банковских операциях и список категорий операций
+    и возвращает словарь, в котором ключи — это названия категорий,
+    а значения — это количество операций в каждой категории
+    """
+    result = Counter(
+        [operation["description"] for operation in operations if operation["description"] in list_of_category]
+    )
+
+    return dict(result)
+
+

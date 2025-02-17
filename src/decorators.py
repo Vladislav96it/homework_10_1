@@ -1,43 +1,47 @@
 from functools import wraps
-from typing import Any, Callable
+from typing import Any, Callable, Optional
 
 
-def log(filename: str | None = None) -> Callable:
-    """Декоратор - логирует вызов функции и ее результат в файл или в консоль.
-    Декоратор принимает один необязательный аргумент filename,
-    который определяет путь к файлу, в который будут записываться логи.
-    Если filename не задан, то логи будут выводиться в консоль.
-    Если вызов функции закончился ошибкой, то записывается сообщение об ошибке и входные параметры функции.
+def log(filename: Optional[str] = None) -> Callable:
+    """
+    @log()
+    def my_function(x, y):
 
-    Пример использования:
-        @log(filename="mylog.txt")
-        def my_function(x, y):
-            return x + y
+    return x + y
 
-        my_function(1, 2)
+
+    print(my_function(1, 2))
     """
 
-    def wrapper(func: Callable) -> Callable:
+    def decorator(func: Callable) -> Callable:
         @wraps(func)
-        def inner(*args: Any, **kwargs: Any) -> Any:
+        def wrapper(*args: Any, **kwargs: Any) -> Any:
             try:
                 result = func(*args, **kwargs)
-                if filename is None:
-                    print(f"{func.__name__} ok")
+                if filename:
+                    with open(filename, "w") as file:
+                        file.write(f"{func.__name__} ok")
                 else:
-                    with open(filename, "w") as f:
-                        f.write(f"{func.__name__} ok")
-
+                    print(f"{func.__name__} ok")
                 return result
             except Exception as e:
-                if filename is None:
-                    print(f"{func.__name__} error: {type(e).__name__} ({e}). Inputs: {args}, {kwargs}")
+                if filename:
+                    with open(filename, "w") as file:
+                        file.write(f"{func.__name__} error: {e}. Inputs: ({args}, {kwargs})")
                 else:
-                    with open(filename, "w") as f:
-                        f.write(f"{func.__name__} error: {type(e).__name__} ({e}). Inputs: {args}, {kwargs}")
-
+                    print(f"{func.__name__} error: {e}. Inputs: ({args}, {kwargs})")
                 raise e
 
-        return inner
+        return wrapper
 
-    return wrapper
+    return decorator
+
+
+# Для проверки работы Pytest
+@log()
+def my_function(x, y):
+
+    return x + y
+
+
+print(my_function(1, 2))

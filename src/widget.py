@@ -1,18 +1,27 @@
-from src.masks import card_hide, masks_account_numbers
+from datetime import datetime
+
+from src.masks import mask_account, mask_card
 
 
-def mask_account_card(object: str) -> str:
-    """функцию, которая умеет работать как с картами, так и со счетами."""
-    if object[:4] == "Счет":
-        return f"{object[:5]}{masks_account_numbers(int(object[5:]))}"
-    return f"{object[:-16]}{card_hide(int(object[-16:]))}"
+def mask_data(data: str) -> str:
+    """ Маскирует номер карты/счета в зависимости от типа """
+
+    name = []
+    number = []
+    for i in data:
+        if i.isalpha():
+            name.append(i)
+        elif i.isdigit():
+            number.append(i)
+
+    if len(number) == 16:
+        return f"{"".join(name)} {mask_card(int("".join(number)))}"
+    else:
+        return f"{"".join(name)} {mask_account(int("".join(number)))}"
 
 
-# print(mask_account_card("Счет 73654108430135874305"))
-
-date_no = "2018-07-11T02:26:18.671407"
-
-
-def get_data(date_no: str) -> str:
-    """Функция преобразовывает входную строчку в дату"""
-    return f"{date_no[8:10]}.{date_no[5:7]}.{date_no[:4]}"
+def convert_date(date: str) -> str:
+    """ Конвертирует дату """
+    cor_date = datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%f")
+    cor_date_str = datetime.strftime(cor_date, "%d.%m.%Y")
+    return cor_date_str
